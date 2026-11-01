@@ -1,0 +1,49 @@
+@startuml diagrama-casos-de-uso
+left to right direction
+skinparam packageStyle rectangle
+
+actor "AT-01: Estudante Unifor\n(Outgoing)" as AT01
+actor "AT-02: Docente /\nPesquisador" as AT02
+actor "AT-03: Estudante Internacional\n(Incoming)" as AT03
+actor "AT-05: Coordenador\nde Curso" as AT05
+actor "AT-04: Gestor de Conteúdo\nda DRI" as AT04
+actor "AT-06: Autenticação\nInstitucional" as AT06
+
+rectangle "Portal de Internacionalização Unifor" {
+  usecase "CDU-01: Consultar Programas de\nIntercâmbio e Dupla Titulação" as UC01
+  usecase "CDU-02: Gerenciar e Publicar Conteúdos\ndo Portal (Governança DRI)" as UC02
+  usecase "CDU-03: Consultar Guias e Checklists\nde Vistos e Documentação" as UC03
+  usecase "CDU-04: Consultar Estimativas de Despesas\ne Guia de Hospedagem" as UC04
+  usecase "CDU-05: Consultar Serviços da DRI e\nOrientações de Aproveitamento" as UC05
+  usecase "CDU-06: Solicitar Orientação /\nAtendimento à DRI" as UC06
+  usecase "CDU-07: Gerenciar Solicitações\nde Orientação" as UC07
+  usecase "CDU-08: Buscar Conteúdos e\nAlternar Idioma (PT/EN/ES)" as UC08
+}
+
+AT01 --> UC01
+AT01 --> UC03
+AT01 --> UC04
+AT01 --> UC05
+AT01 --> UC06
+AT01 --> UC08
+
+AT02 --> UC01
+AT02 --> UC05
+AT02 --> UC06
+AT02 --> UC08
+
+AT03 --> UC03
+AT03 --> UC04
+AT03 --> UC05
+AT03 --> UC06
+AT03 --> UC08
+
+AT05 --> UC01
+AT05 --> UC05
+
+AT04 --> UC02
+AT04 --> UC07
+
+UC02 ..> AT06 : <<include>>
+UC06 .> UC05 : <<extend>>
+@enduml

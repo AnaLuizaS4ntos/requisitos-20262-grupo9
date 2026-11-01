@@ -1,0 +1,31 @@
+flowchart LR
+    subgraph Cliente["Dispositivo do Usuário (Estudante, Docente, Gestor DRI)"]
+        Browser["Navegador Web (Desktop / Mobile) - HTTPS (TLS 1.2+)"]
+    end
+
+    subgraph InfraUnifor["Ambiente em Nuvem / Infraestrutura Institucional Unifor"]
+        CDN["CDN / Reverse Proxy (WAF & Cache Estático)"]
+
+        subgraph AppServer["Servidor de Aplicação (Container Docker)"]
+            FrontendNode["Frontend Web Server (SPA / SSR)"]
+            BackendAPI["API Backend Portal DRI"]
+        end
+
+        subgraph DataTier["Camada de Dados e Armazenamento"]
+            PostgresDB[("Servidor de Banco de Dados PostgreSQL")]
+            ObjectStorage[("Object Storage (Documentos PDF e Imagens)")]
+        end
+    end
+
+    subgraph Externos["Serviços Institucionais Externos"]
+        SSOServer["Servidor de Autenticação Unifor"]
+        MailServer["Gateway de E-mail Institucional"]
+    end
+
+    Browser -->|"HTTPS (443)"| CDN
+    CDN --> FrontendNode
+    CDN --> BackendAPI
+    BackendAPI -->|"TCP/SSL (5432)"| PostgresDB
+    BackendAPI -->|"HTTPS API"| ObjectStorage
+    BackendAPI -->|"OAuth2 / OIDC"| SSOServer
+    BackendAPI -->|"SMTP / TLS"| MailServer

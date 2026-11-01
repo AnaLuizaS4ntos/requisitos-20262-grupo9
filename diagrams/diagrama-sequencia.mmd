@@ -1,0 +1,23 @@
+sequenceDiagram
+    autonumber
+    actor Usuario as AT-01 / AT-02 / AT-03 (Estudante ou Docente)
+    participant UI as Interface Web (Portal)
+    participant API as API de Catálogo e Conteúdo
+    participant I18N as Serviço Multilíngue (i18n)
+    participant DB as Banco de Dados (Portal DRI)
+
+    Usuario->>UI: Acessa o Portal e seleciona idioma (PT-BR / EN / ES)
+    UI->>API: GET /api/v1/programas?curso=ENG&modalidade=DUPLA_TITULACAO&lang=pt-BR
+    API->>DB: Consulta programas publicados (status = PUBLICADO) e cursos elegíveis
+    DB-->>API: Retorna lista de acordos e instituições parceiras
+    API->>I18N: Verifica disponibilidade de tradução no idioma solicitado (RN-03)
+    I18N-->>API: Retorna textos no idioma ou aplica fallback PT-BR com alerta
+    API-->>UI: JSON com lista de programas, requisitos e metadados
+    UI-->>Usuario: Exibe catálogo filtrado de intercâmbio e dupla titulação
+
+    Usuario->>UI: Clica em um programa para ver Vistos, Aproveitamento e Custos
+    UI->>API: GET /api/v1/programas/{id}/guias-vinculados?lang=pt-BR
+    API->>DB: Busca checklist de vistos, regras de aproveitamento e estimativa de despesas
+    DB-->>API: Retorna dados detalhados + dataUltimaRevisao (RN-02)
+    API-->>UI: Payload completo + aviso de caráter orientativo (RN-04, RN-05)
+    UI-->>Usuario: Renderiza abas (Requisitos, Visto/Checklist, Aproveitamento, Custos/Hospedagem)
