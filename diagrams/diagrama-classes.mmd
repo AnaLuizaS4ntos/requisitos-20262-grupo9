@@ -1,0 +1,105 @@
+classDiagram
+    class InstituicaoParceira {
+        +UUID id
+        +String nome
+        +String pais
+        +String cidade
+        +String siteOficial
+        +Boolean convenioAtivo
+    }
+
+    class ProgramaMobilidade {
+        +UUID id
+        +String titulo
+        +TipoMobilidade modalidade
+        +NivelIdioma idiomaExigido
+        +String duracaoSemestres
+        +String preRequisitos
+        +StatusPublicacao status
+        +Date dataUltimaRevisao
+    }
+
+    class CursoUnifor {
+        +UUID id
+        +String codigoCurso
+        +String nomeCurso
+        +String centroAcademico
+    }
+
+    class GuiaInformativo {
+        +UUID id
+        +String slug
+        +CategoriaGuia categoria
+        +PerfilPublico publicoAlvo
+        +Boolean exigeDisclaimerLegal
+        +StatusPublicacao status
+        +Date dataUltimaRevisao
+        +Int versao
+    }
+
+    class ConteudoTraduzido {
+        +UUID id
+        +CodigoIdioma idioma
+        +String tituloTraduzido
+        +String resumo
+        +String corpoMarkdown
+        +Date dataTraducao
+    }
+
+    class ItemChecklistDocumento {
+        +UUID id
+        +String nomeDocumento
+        +String descricaoOrientativa
+        +Boolean obrigatorio
+        +Int ordemExibicao
+    }
+
+    class EstimativaCustoDestino {
+        +UUID id
+        +String moedaLocal
+        +Decimal faixaMoradiaMensal
+        +Decimal faixaAlimentacaoMensal
+        +Decimal faixaTransporteMensal
+        +Decimal faixaSeguroSaude
+        +String orientacaoHospedagem
+        +Date dataReferenciaCotacao
+    }
+
+    class SolicitacaoOrientacao {
+        +UUID id
+        +String protocolo
+        +String nomeSolicitante
+        +String emailSolicitante
+        +PerfilPublico perfilSolicitante
+        +CategoriaGuia temaDuvida
+        +String mensagem
+        +Boolean consentimentoLGPD
+        +StatusAtendimento status
+        +DateTime dataCriacao
+    }
+
+    class GestorDRI {
+        +UUID id
+        +String matricula
+        +String nome
+        +String emailInstitucional
+        +String cargo
+    }
+
+    class LogGovernanca {
+        +UUID id
+        +String acaoRealizada
+        +DateTime dataHora
+        +String observacaoRevisao
+    }
+
+    InstituicaoParceira "1" --> "0..*" ProgramaMobilidade : oferece
+    InstituicaoParceira "1" --> "0..1" EstimativaCustoDestino : possui referencia
+    ProgramaMobilidade "0..*" -- "1..*" CursoUnifor : elegivel para
+    GuiaInformativo "1" *-- "1..3" ConteudoTraduzido : traduzido em (PT/EN/ES)
+    ProgramaMobilidade "1" *-- "1..3" ConteudoTraduzido : traduzido em (PT/EN/ES)
+    GuiaInformativo "1" *-- "0..*" ItemChecklistDocumento : contem checklist
+    GestorDRI "1" --> "0..*" GuiaInformativo : publica e revisa
+    GestorDRI "1" --> "0..*" ProgramaMobilidade : gerencia
+    GestorDRI "1" --> "0..*" SolicitacaoOrientacao : atende
+    GestorDRI "1" --> "0..*" LogGovernanca : gera auditoria

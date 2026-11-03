@@ -1,0 +1,43 @@
+flowchart TB
+    subgraph CamadaApresentacao["Camada de Apresentação (Frontend Web Responsivo & Acessível)"]
+        UI_Publica["Portal Público (Guias, Catálogo, Busca, FAQ)"]
+        UI_Admin["Painel de Governança DRI (CMS Editorial)"]
+        Mod_A11y["Módulo de Acessibilidade (WCAG 2.1 AA) & Seletor i18n"]
+    end
+
+    subgraph CamadaAplicacao["Camada de Aplicação e Negócio (API Backend)"]
+        Comp_Catalogo["Componente de Catálogo (Intercâmbio & Dupla Titulação)"]
+        Comp_Guias["Componente de Guias (Vistos, Aproveitamento, Despesas, Hospedagem)"]
+        Comp_Governanca["Componente de Governança Editorial & Versionamento"]
+        Comp_Atendimento["Componente de Solicitações de Orientação & FAQ"]
+        Comp_Busca["Motor de Busca Unificada e Filtros"]
+    end
+
+    subgraph CamadaDados["Camada de Persistência"]
+        DB_Relacional[("Banco de Dados Relacional (PostgreSQL)")]
+        Storage_Anexos[("Repositório de Arquivos / PDFs (Modelos e Guias)")]
+    end
+
+    subgraph ServicosExternos["Sistemas Externos"]
+        Auth_Unifor["Autenticação Institucional (SSO / Unifor Online)"]
+        Smtp_Email["Serviço de Notificação por E-mail"]
+    end
+
+    UI_Publica --> Mod_A11y
+    UI_Publica --> Comp_Catalogo
+    UI_Publica --> Comp_Guias
+    UI_Publica --> Comp_Atendimento
+    UI_Publica --> Comp_Busca
+
+    UI_Admin --> Comp_Governanca
+    UI_Admin --> Comp_Atendimento
+
+    Comp_Governanca --> Auth_Unifor
+    Comp_Atendimento --> Smtp_Email
+
+    Comp_Catalogo --> DB_Relacional
+    Comp_Guias --> DB_Relacional
+    Comp_Guias --> Storage_Anexos
+    Comp_Governanca --> DB_Relacional
+    Comp_Atendimento --> DB_Relacional
+    Comp_Busca --> DB_Relacional
